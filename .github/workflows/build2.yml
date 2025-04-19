@@ -24,7 +24,7 @@ jobs:
         
     - name: Install Pods
       run: |
-        cd Cryptomator  # 关键修改：进入项目根目录
+        cd ios  # 关键修改：进入项目根目录
         pod install
         
     - name: Build with Fastlane
