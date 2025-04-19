@@ -23,17 +23,18 @@ jobs:
       run: gem install cocoapods
         
     - name: Install Pods
-      working-directory: ios
-      run: pod install
+      run: |
+        cd Cryptomator  # 关键修改：进入项目根目录
+        pod install
         
     - name: Build with Fastlane
       uses: maierj/fastlane-action@v2.3.0
       with:
         lane: build_ipa
-        options: '{"workspace":"ios/Cryptomator.xcworkspace","scheme":"Cryptomator","export_method":"development"}'
+        options: '{"workspace":"Cryptomator/Cryptomator.xcworkspace","scheme":"Cryptomator","export_method":"development"}'
         
     - name: Upload IPA
-      uses: actions/upload-artifact@v4  # 关键修改：升级到 v4
+      uses: actions/upload-artifact@v4
       with:
         name: Cryptomator-iOS
-        path: ios/Cryptomator.ipa
+        path: Cryptomator/Cryptomator.ipa
