@@ -42,7 +42,7 @@ jobs:
                    -exportOptionsPlist ExportOptions-unsigned.plist
 
     - name: Upload IPA artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Cryptomator-unsigned.ipa
         path: build/Cryptomator.ipa
