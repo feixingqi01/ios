@@ -1,0 +1,40 @@
+name: Build iOS
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode version
+      run: sudo xcode-select -s /Applications/Xcode_15.2.app
+      
+    - name: Install CocoaPods
+      run: |
+        sudo gem install cocoapods
+        pod setup
+        
+    - name: Install dependencies
+      run: |
+        cd ios
+        pod install
+        
+    - name: Build iOS
+      uses: sparkfabrik/ios-build-action@v2.3.2
+      with:
+        project-path: 'Cryptomator.xcodeproj'
+        scheme: 'Cryptomator'
+        configuration: 'Release'
+        sdk: 'iphoneos'
+        export-options-path: 'ExportOptions.plist'
+      env:
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
