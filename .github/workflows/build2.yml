@@ -33,7 +33,7 @@ jobs:
         options: '{"workspace":"ios/Cryptomator.xcworkspace","scheme":"Cryptomator","export_method":"development"}'
         
     - name: Upload IPA
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # 关键修改：升级到 v4
       with:
         name: Cryptomator-iOS
         path: ios/Cryptomator.ipa
