@@ -14,7 +14,7 @@ jobs:
       with:
         submodules: recursive
         
-    - name: Set Ruby Version
+    - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.1
@@ -22,19 +22,18 @@ jobs:
     - name: Install CocoaPods
       run: gem install cocoapods
         
-    - name: Pod Install
+    - name: Install Pods
       working-directory: ios
       run: pod install
         
-    - name: Build IPA
-      uses: yukiarrr/ios-build-action@v2.0.0
+    - name: Build with Fastlane
+      uses: maierj/fastlane-action@v2.3.0
       with:
-        project-path: ios/Cryptomator.xcworkspace
-        scheme: Cryptomator
-        export-method: development
-        configuration: Release
+        lane: build_ipa
+        options: '{"workspace":"ios/Cryptomator.xcworkspace","scheme":"Cryptomator","export_method":"development"}'
         
-    - uses: actions/upload-artifact@v3
+    - name: Upload IPA
+      uses: actions/upload-artifact@v3
       with:
         name: Cryptomator-iOS
-        path: build/ios/ipa/*.ipa
+        path: ios/Cryptomator.ipa
