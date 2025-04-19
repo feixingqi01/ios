@@ -1,0 +1,36 @@
+name: Build Cryptomator IPA
+
+on:
+  workflow_dispatch: # 允许手动触发
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        
+    - name: Install CocoaPods
+      run: sudo gem install cocoapods
+        
+    - name: Pod Install
+      run: |
+        cd ios
+        pod install
+        
+    - name: Build IPA
+      uses: yukiarrr/ios-build-action@v1.8.1
+      with:
+        project-path: ios/Cryptomator.xcworkspace
+        scheme: Cryptomator
+        export-method: development
+        configuration: Debug
+        
+    - uses: actions/upload-artifact@v3
+      with:
+        name: Cryptomator-iOS
+        path: build/ios/ipa/*.ipa
