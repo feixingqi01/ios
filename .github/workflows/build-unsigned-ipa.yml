@@ -1,0 +1,48 @@
+name: Build Unsigned IPA
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set Xcode version (15.2)
+      run: sudo xcode-select -s /Applications/Xcode_15.2.app
+
+    - name: Install CocoaPods
+      run: |
+        sudo gem install cocoapods
+        pod install
+
+    - name: Build .xcarchive (unsigned)
+      run: |
+        xcodebuild -workspace Cryptomator.xcworkspace \
+                   -scheme Cryptomator \
+                   -configuration Release \
+                   -archivePath build/Cryptomator.xcarchive \
+                   CODE_SIGN_IDENTITY="" \
+                   CODE_SIGNING_REQUIRED=NO \
+                   CODE_SIGNING_ALLOWED=NO \
+                   archive
+
+    - name: Export unsigned IPA
+      run: |
+        xcodebuild -exportArchive \
+                   -archivePath build/Cryptomator.xcarchive \
+                   -exportPath build \
+                   -exportOptionsPlist ExportOptions-unsigned.plist
+
+    - name: Upload IPA artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Cryptomator-unsigned.ipa
+        path: build/Cryptomator.ipa
