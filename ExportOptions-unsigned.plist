@@ -3,14 +3,18 @@
 <plist version="1.0">
 <dict>
     <key>method</key>
-    <string>development</string>  <!-- 不签名 -->
+    <string>development</string> <!-- 非 App Store 签名 -->
     <key>compileBitcode</key>
-    <false/>
+    <false/> <!-- 避免 Bitcode 编译问题 -->
     <key>uploadBitcode</key>
     <false/>
     <key>uploadSymbols</key>
     <false/>
     <key>signingStyle</key>
-    <string>manual</string>  <!-- 不自动签名 -->
+    <string>manual</string> <!-- 手动签名 -->
+    <key>provisioningProfiles</key>
+    <dict>
+        <!-- 留空，不自动签名 -->
+    </dict>
 </dict>
 </plist>
